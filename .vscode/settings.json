@@ -1,0 +1,3 @@
+{
+  "rust-analyzer.linkedProjects": ["services/auth-service/Cargo.toml"]
+}
