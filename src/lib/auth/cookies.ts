@@ -17,7 +17,7 @@ const base = {
 export async function setAuthCookies(tokens: {
   access_token: string;
   refresh_token: string;
-}) {
+}): Promise<void> {
   const store = await cookies();
   store.set(ACCESS_COOKIE, tokens.access_token, {
     ...base,
@@ -29,8 +29,13 @@ export async function setAuthCookies(tokens: {
   });
 }
 
-export async function clearAuthCookies() {
+export async function clearAuthCookies(): Promise<void> {
   const store = await cookies();
   store.delete(ACCESS_COOKIE);
   store.delete(REFRESH_COOKIE);
+}
+
+export async function getRefreshToken(): Promise<string | undefined> {
+  const store = await cookies();
+  return store.get(REFRESH_COOKIE)?.value;
 }
