@@ -1,4 +1,5 @@
 use axum::{Json, extract::State, http::StatusCode};
+use validator::Validate;
 
 use std::env;
 
@@ -19,6 +20,10 @@ pub async fn register(
     State(state): State<AppState>,
     Json(payload): Json<AuthPayload>,
 ) -> Result<(StatusCode, Json<UserResponse>), AppError> {
+    payload
+        .validate()
+        .map_err(|e| AppError::BadRequest(e.to_string()))?;
+
     if payload.email.trim().is_empty() || payload.password.trim().is_empty() {
         return Err(AppError::BadRequest(
             "Email dan password tidak boleh kosong.".to_string(),
