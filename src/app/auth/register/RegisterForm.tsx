@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { RegisterSchema } from "@/lib/validations/register.schema";
 import { api } from "@/lib/client";
 import { RegisterResponse } from "@/lib/types";
+import { ApiError } from "@/lib/error";
+import { toast } from "@/components/ui/toast";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 
@@ -23,19 +25,26 @@ export default function RegisterForm() {
   });
 
   async function onSubmit(data: RegisterValues) {
-    try {
-      const response = await api<RegisterResponse>("auth/register", {
-        method: "POST",
-        body: JSON.stringify({
-          data,
-        }),
-      });
+    const promise = api<RegisterResponse>("auth/register", {
+      method: "POST",
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+      }),
+    });
 
-      console.log({ response });
-    } catch (error) {}
-    console.log({ data });
+    toast.promise(promise, {
+      loading: "Creating account...",
+      success: "Account Successfully created.",
+      error: (error) => {
+        if (error instanceof ApiError) {
+          return error.message;
+        }
+
+        return "Something went wrong.";
+      },
+    });
   }
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
       <div className="space-y-2">

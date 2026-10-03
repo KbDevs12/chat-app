@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, IBM_Plex_Mono } from "next/font/google";
+import { Toaster } from "@/components/ui/toast";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,7 +31,10 @@ export default function RootLayout({
       lang="id"
       className={`${inter.variable} ${ibmPlexMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full bg-paper text-ink font-sans">{children}</body>
+      <body className="min-h-full bg-paper text-ink font-sans">
+        <main>{children}</main>
+        <Toaster />
+      </body>
     </html>
   );
 }
