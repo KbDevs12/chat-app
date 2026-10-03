@@ -19,7 +19,7 @@ pub fn hash_password(password: &str) -> Result<String, AppError> {
 pub fn verify_password(password: &str, password_hash: &str) -> Result<bool, AppError> {
     let parsed_hash = PasswordHash::new(password_hash).map_err(|e| {
         eprintln!("Error parsing password hash: {:?}", e);
-        AppError::InternalServerError("Format password hash tidak valid".to_string());
+        AppError::InternalServerError("Format password hash tidak valid".to_string())
     })?;
 
     let argon2 = Argon2::default();
