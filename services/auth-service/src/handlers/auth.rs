@@ -57,8 +57,11 @@ pub async fn register(
 
 pub async fn login(
     State(state): State<AppState>,
-    Json(payload): Json<AuthPayload>,
+    Json(mut payload): Json<AuthPayload>,
 ) -> Result<Json<AuthResponse>, AppError> {
+    payload.email = payload.email.trim().to_lowercase();
+    payload.validate()?;
+
     let jwt_secret = env::var("JWT_SECRET")
         .map_err(|_| AppError::InternalServerError("Terjadi kesalahan pada server.".to_string()))?;
 
