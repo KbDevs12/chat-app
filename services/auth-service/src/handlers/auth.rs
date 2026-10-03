@@ -50,3 +50,42 @@ pub async fn register(
 
     Ok((StatusCode::CREATED, Json(UserResponse::from(user))))
 }
+
+pub async fn login(
+    State(state): State<AppState>,
+    Json(payload): Json<AuthPayload>,
+) -> Result<Json<AuthResponse>, AppError> {
+    let jwt_secret = env::var("JWT_SECRET")
+        .map_err(|e| AppError::InternalServerError("Terjadi kesalahan pada server.".to_string()))?;
+
+    let user = sqlx::query_as!(
+        User,
+        "SELECT id, email, password, created_at, updated_at FROM users where email = $1",
+        payload.email
+    )
+    .fetch_optional(&state.db)
+    .await?
+    .ok_or_else(|| AppError::Unauthorized("Email atau Password salah".to_string()))?;
+
+    let is_password_valid = verify_password(&payload.password, &user.password)?;
+    if !is_password_valid {
+        return Err(AppError::Unauthorized("Password salah.".to_string()));
+    }
+
+    let access_token = generate_access_token(user.id, &user.email, &jwt_secret)?;
+    let refresh_token = generate_refresh_token(user.id, &user.email, &jwt_secret)?;
+
+    sqlx::query!(
+        "INSERT INTO refresh_tokens (user_id, token) VALUES ($1, $2)",
+        user.id,
+        refresh_token
+    )
+    .execute(&state.db)
+    .await?;
+
+    Ok(Json(AuthResponse {
+        access_token,
+        refresh_token,
+        user: (UserResponse::from(user)),
+    }))
+}
