@@ -42,7 +42,7 @@ export default function RegisterForm() {
 
     try {
       await promise;
-      router.push("/login");
+      router.push("/");
     } catch (err) {
       if (!(err instanceof ApiError)) return;
 
