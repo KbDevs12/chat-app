@@ -12,5 +12,7 @@ pub fn app_router(state: AppState) -> Router {
         .route("/health", get(|| async { "Auth Service is OK." }))
         .route("/api/auth/register", post(register))
         .route("/api/auth/login", post(login))
+        .route("/api/auth/refresh", post(refresh_token))
+        .route("/api/auth/logout", post(logout))
         .with_state(state)
 }
