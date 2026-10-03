@@ -3,90 +3,107 @@
 @import "@fontsource/inter/400.css";
 @import "@fontsource/inter/500.css";
 @import "@fontsource/inter/600.css";
-@import "@fontsource/inter/700.css";
 @import "@fontsource/ibm-plex-mono/400.css";
 
-@theme {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", monospace;
+:root {
+  color-scheme: light dark;
 
-  --color-paper: #fafaf8;
-  --color-ink: #1c1b19;
-  --color-muted: #6b6960;
-  --color-line: #e4e2db;
-  --color-teal: #0f6e56;
-  --color-amber: #b45309;
+  --background: #f5f3ef;
+  --foreground: #1f1d1a;
+  --card: #fffdfa;
+  --card-foreground: #1f1d1a;
+  --popover: #fffdfa;
+  --popover-foreground: #1f1d1a;
+  --primary: #c8431a;
+  --primary-foreground: #fffaf5;
+  --secondary: #ebe7e0;
+  --secondary-foreground: #1f1d1a;
+  --muted: #ebe7e0;
+  --muted-foreground: #6a655c;
+  --accent: #f1ddd0;
+  --accent-foreground: #7a2a0e;
+  --destructive: #9f1239;
+  --border: #ddd8cf;
+  --input: #ddd8cf;
+  --ring: #c8431a;
+  --radius: 0.625rem;
 
-  --color-panel: #141413;
-  --color-panel-raised: #1c1c1a;
-  --color-dark-ink: #f1f0ec;
-  --color-dark-muted: #9c9a91;
-  --color-dark-line: #2c2c29;
-  --color-dark-teal: #3fbe95;
-  --color-dark-amber: #d97706;
-}
-
-@layer base {
-  * {
-    @apply border-line;
-  }
-
-  body {
-    @apply bg-paper text-ink font-sans antialiased;
-  }
-
-  button,
-  input,
-  textarea {
-    font: inherit;
-  }
-
-  button {
-    @apply cursor-pointer;
-  }
-}
-
-@layer components {
-  .chat-panel {
-    @apply rounded-xl border border-line bg-paper;
-  }
-
-  .chat-input {
-    @apply w-full rounded-lg border border-line bg-paper px-4 py-2.5 text-sm outline-none transition;
-    @apply focus:border-teal focus:ring-2 focus:ring-teal/15;
-  }
-
-  .chat-bubble {
-    @apply max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed;
-  }
-
-  .chat-bubble-incoming {
-    @apply bg-line/60 text-ink;
-  }
-
-  .chat-bubble-outgoing {
-    @apply bg-teal text-white;
-  }
-
-  .chat-nav-item {
-    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted transition;
-    @apply hover:bg-line/50 hover:text-ink;
-  }
-
-  .chat-nav-item-active {
-    @apply bg-teal/10 text-teal;
-  }
+  /* chat-specific */
+  --bubble-in: #ebe7e0;
+  --bubble-in-foreground: #1f1d1a;
+  --bubble-out: #c8431a;
+  --bubble-out-foreground: #fffaf5;
+  --online: #5f9a45;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    color-scheme: dark;
+    --background: #181614;
+    --foreground: #efebe4;
+    --card: #201d1a;
+    --card-foreground: #efebe4;
+    --popover: #201d1a;
+    --popover-foreground: #efebe4;
+    --primary: #ff8a5c;
+    --primary-foreground: #1d0e07;
+    --secondary: #2a2723;
+    --secondary-foreground: #efebe4;
+    --muted: #2a2723;
+    --muted-foreground: #a39d92;
+    --accent: #3a2418;
+    --accent-foreground: #ffc2a6;
+    --destructive: #f0707f;
+    --border: #332f2a;
+    --input: #3a3631;
+    --ring: #ff8a5c;
 
-    --color-paper: #141413;
-    --color-ink: #f1f0ec;
-    --color-muted: #9c9a91;
-    --color-line: #2c2c29;
-    --color-teal: #3fbe95;
-    --color-amber: #d97706;
+    --bubble-in: #2a2723;
+    --bubble-in-foreground: #efebe4;
+    --bubble-out: #ff8a5c;
+    --bubble-out-foreground: #1d0e07;
+    --online: #7bbf5e;
+  }
+}
+
+@theme inline {
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", monospace;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-bubble-in: var(--bubble-in);
+  --color-bubble-in-foreground: var(--bubble-in-foreground);
+  --color-bubble-out: var(--bubble-out);
+  --color-bubble-out-foreground: var(--bubble-out-foreground);
+  --color-online: var(--online);
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
   }
 }
