@@ -33,3 +33,29 @@ pub fn generate_access_token(user_id: Uuid, email: &str, secret: &str) -> Result
         AppError::InternalServerError("Gagal membuat access token.".to_string())
     })
 }
+
+pub fn generate_refresh_token(
+    user_id: Uuid,
+    email: &str,
+    secret: &str,
+) -> Result<String, AppError> {
+    let now = Utc::now();
+    let expiration = now + Duration::days(7);
+
+    let claims = Claims {
+        sub: user_id,
+        email: email.to_string(),
+        exp: expiration.timestamp() as usize,
+        iat: now.timestamp() as usize,
+    };
+
+    encode(
+        &Header::default(),
+        &claims,
+        &EncodingKey::from_secret(secret.as_bytes()),
+    )
+    .map_err(|e| {
+        eprintln!("Error generating refresh token: ", e);
+        AppError::InternalServerError("Gagal membuat refresh token.".to_string())
+    })
+}
