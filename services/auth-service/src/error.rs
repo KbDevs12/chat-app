@@ -13,8 +13,8 @@ pub enum AppError {
 }
 
 impl From<sqlx::Error> for AppError {
-    fn from(value: sqlx::Error) -> Self {
-        AppError::DatabaseError(value)
+    fn from(err: sqlx::Error) -> Self {
+        AppError::DatabaseError(err)
     }
 }
 
@@ -24,10 +24,14 @@ impl IntoResponse for AppError {
             AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, msg),
             AppError::Unauthorized(msg) => (StatusCode::UNAUTHORIZED, msg),
             AppError::InternalServerError(msg) => (StatusCode::INTERNAL_SERVER_ERROR, msg),
-            AppError::DatabaseError(err) => eprintln!("Database Error: {:?}", err)(
-                StatusCode::INTERNAL_SERVER_ERROR,
-                "Terjadi kesalahan internal pada server.",
-            ),
+            AppError::DatabaseError(err) => {
+                eprintln!("Database error: {:?}", err);
+
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    "Terjadi kesalahan internal pada server".to_string(),
+                )
+            }
         };
 
         let body = Json(json!({
