@@ -30,7 +30,7 @@ pub fn generate_access_token(user_id: Uuid, email: &str, secret: &str) -> Result
         &EncodingKey::from_secret(secret.as_bytes()),
     )
     .map_err(|e| {
-        eprintln!("Error generating access token: ", e);
+        eprintln!("Error generating access token: {}", e);
         AppError::InternalServerError("Gagal membuat access token.".to_string())
     })
 }
@@ -56,7 +56,7 @@ pub fn generate_refresh_token(
         &EncodingKey::from_secret(secret.as_bytes()),
     )
     .map_err(|e| {
-        eprintln!("Error generating refresh token: ", e);
+        eprintln!("Error generating refresh token: {}", e);
         AppError::InternalServerError("Gagal membuat refresh token.".to_string())
     })
 }
