@@ -7,6 +7,8 @@ use axum::{
     routing::{get, post},
 };
 
+use tower_http::cors::CorsLayer;
+
 pub fn app_router(state: AppState) -> Router {
     Router::new()
         .route("/health", get(|| async { "Auth Service is OK." }))
@@ -14,5 +16,6 @@ pub fn app_router(state: AppState) -> Router {
         .route("/api/auth/login", post(login))
         .route("/api/auth/refresh", post(refresh_token))
         .route("/api/auth/logout", post(logout))
+        .layer(CorsLayer::permissive())
         .with_state(state)
 }
