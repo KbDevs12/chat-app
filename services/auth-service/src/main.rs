@@ -1,6 +1,9 @@
 mod error;
+mod handlers;
+mod models;
 mod router;
 mod state;
+mod utils;
 
 use std::env;
 
