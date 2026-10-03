@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
   if (!parsed.success) {
     return errorResponse(
-      { error: "Body request tidak valid.", code: "BAD_REQUEST" },
+      { error: "Body request not valid.", code: "BAD_REQUEST" },
       400,
     );
   }
