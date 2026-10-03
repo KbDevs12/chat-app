@@ -12,7 +12,7 @@ async fn reg_001_register_with_valid_credentials(db: PgPool) {
         "password": "Password123!"
     });
 
-    let (status, body) = common::post_json(app, "/auth/register", payload).await;
+    let (status, body) = common::post_json(app, "/api/auth/register", payload).await;
 
     assert_eq!(status, StatusCode::CREATED);
     assert_eq!(body["email"], "test@example.com");
