@@ -12,6 +12,7 @@ pub enum AppError {
     BadRequest(String),
     Unauthorized(String),
     InternalServerError(String),
+    Conflict(String),
     DatabaseError(sqlx::Error),
     Validation(HashMap<String, Vec<String>>),
 }
@@ -41,6 +42,11 @@ impl From<ValidationErrors> for AppError {
 
 impl From<sqlx::Error> for AppError {
     fn from(err: sqlx::Error) -> Self {
+        if let sqlx::Error::Database(db_err) = &err {
+            if db_err.is_unique_violation() {
+                return AppError::Conflict("Email sudah terdaftar.".to_string());
+            }
+        }
         AppError::DatabaseError(err)
     }
 }
@@ -48,23 +54,43 @@ impl From<sqlx::Error> for AppError {
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
         let (status, body) = match self {
-            AppError::BadRequest(msg) => (StatusCode::BAD_REQUEST, json!({ "error": msg })),
-            AppError::Unauthorized(msg) => (StatusCode::UNAUTHORIZED, json!({ "error": msg })),
+            AppError::BadRequest(msg) => (
+                StatusCode::BAD_REQUEST,
+                json!({ "error": msg, "code": "BAD_REQUEST" }),
+            ),
+            AppError::Unauthorized(msg) => (
+                StatusCode::UNAUTHORIZED,
+                json!({ "error": msg, "code": "UNAUTHORIZED" }),
+            ),
+            AppError::Conflict(msg) => (
+                StatusCode::CONFLICT,
+                json!({ "error": msg, "code": "CONFLICT" }),
+            ),
             AppError::InternalServerError(msg) => {
-                (StatusCode::INTERNAL_SERVER_ERROR, json!({ "error": msg }))
+                eprintln!("Internal error: {msg}");
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    json!({
+                        "error": "Terjadi kesalahan internal pada server",
+                        "code": "INTERNAL_ERROR"
+                    }),
+                )
             }
             AppError::DatabaseError(err) => {
                 eprintln!("Database error: {:?}", err);
-
                 (
                     StatusCode::INTERNAL_SERVER_ERROR,
-                    json!({ "error": "Terjadi kesalahan internal pada server" }),
+                    json!({
+                        "error": "Terjadi kesalahan internal pada server",
+                        "code": "INTERNAL_ERROR"
+                    }),
                 )
             }
             AppError::Validation(errors) => (
                 StatusCode::UNPROCESSABLE_ENTITY,
                 json!({
                     "error": "Validasi gagal",
+                    "code": "VALIDATION_ERROR",
                     "details": errors
                 }),
             ),
