@@ -34,15 +34,15 @@ export default function RegisterForm() {
     });
 
     toast.promise(promise, {
-      loading: "Mendaftarkan akun...",
+      loading: "Registering account...",
       success: (res: { message: string }) => res.message,
       error: (err: unknown) =>
-        err instanceof ApiError ? err.message : "Terjadi kesalahan.",
+        err instanceof ApiError ? err.message : "Something went wrong.",
     });
 
     try {
       await promise;
-      router.push("/");
+      router.push("/login");
     } catch (err) {
       if (!(err instanceof ApiError)) return;
 

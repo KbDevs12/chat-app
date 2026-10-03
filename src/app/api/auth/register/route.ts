@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     typeof body.password !== "string"
   ) {
     return errorResponse(
-      { error: "Body request tidak valid.", code: "BAD_REQUEST" },
+      { error: "Body request not valid.", code: "BAD_REQUEST" },
       400,
     );
   }
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { message: "Akun berhasil dibuat." },
+      { message: "Account successfully created." },
       { status: 201 },
     );
   } catch (error) {
