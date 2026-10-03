@@ -1,14 +1,12 @@
-use argon2::{Argon2, PasswordHash, PasswordVerifier, password_hash::phc::SaltString};
+use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 
 use crate::error::AppError;
 
 pub fn hash_password(password: &str) -> Result<String, AppError> {
-    let salt = SaltString::generate();
-
     let argon2 = Argon2::default();
 
     argon2
-        .hash_password(password.as_bytes(), &salt)
+        .hash_password(password.as_bytes())
         .map(|hash| hash.to_string())
         .map_err(|e| {
             eprintln!("Error hashing password: {:?}", e);
