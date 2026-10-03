@@ -1,17 +1,10 @@
-mod error;
-mod handlers;
-mod models;
-mod router;
-mod state;
-mod utils;
-
 use std::env;
 
 use dotenvy::dotenv;
 use sqlx::postgres::PgPoolOptions;
 use tokio::net::TcpListener;
 
-use crate::{router::app_router, state::AppState};
+use auth_service::{router::app_router, state::AppState};
 
 #[tokio::main]
 async fn main() {
