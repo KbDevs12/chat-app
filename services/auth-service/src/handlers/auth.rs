@@ -56,7 +56,7 @@ pub async fn login(
     Json(payload): Json<AuthPayload>,
 ) -> Result<Json<AuthResponse>, AppError> {
     let jwt_secret = env::var("JWT_SECRET")
-        .map_err(|e| AppError::InternalServerError("Terjadi kesalahan pada server.".to_string()))?;
+        .map_err(|_| AppError::InternalServerError("Terjadi kesalahan pada server.".to_string()))?;
 
     let user = sqlx::query_as!(
         User,
