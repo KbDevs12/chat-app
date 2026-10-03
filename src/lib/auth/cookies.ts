@@ -28,3 +28,9 @@ export async function setAuthCookies(tokens: {
     maxAge: ACCESS_MAX_AGE,
   });
 }
+
+export async function clearAuthCookies() {
+  const store = await cookies();
+  store.delete(ACCESS_COOKIE);
+  store.delete(REFRESH_COOKIE);
+}
