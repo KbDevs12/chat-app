@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { RegisterSchema } from "@/lib/validations/register.schema";
+import { api } from "@/lib/client";
+import { RegisterResponse } from "@/lib/types";
 
 type RegisterValues = z.infer<typeof RegisterSchema>;
 
@@ -21,6 +23,16 @@ export default function RegisterForm() {
   });
 
   async function onSubmit(data: RegisterValues) {
+    try {
+      const response = await api<RegisterResponse>("auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          data,
+        }),
+      });
+
+      console.log({ response });
+    } catch (error) {}
     console.log({ data });
   }
 
