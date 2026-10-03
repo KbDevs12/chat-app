@@ -34,7 +34,7 @@ pub async fn register(
         .await?;
 
     if existing_user.is_some() {
-        return Err(AppError::BadRequest("Email sudah terdaftar".to_string()));
+        return Err(AppError::Conflict("Email sudah terdaftar".to_string()));
     }
 
     let hashed_password = hash_password(&payload.password)?;
