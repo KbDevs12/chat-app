@@ -4,7 +4,7 @@ import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { toast } from "@/components/ui/toast";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -38,6 +38,7 @@ export default function RegisterForm() {
       success: (res: { message: string }) => res.message,
       error: (err: unknown) =>
         err instanceof ApiError ? err.message : "Something went wrong.",
+      dismissible: true,
     });
 
     try {
